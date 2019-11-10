@@ -17,6 +17,7 @@ APK_PATH = subprocess.check_output('pwd', shell=True).decode().strip()
 UPLOAD_FILE = "curl -F 'file=@%s/%s.apk' http://localhost:8000/api/v1/upload -H 'Authorization:'%s" % (APK_PATH, TARGET, API_KEY)
 UPLOAD_RESPONSE  = str(UPLOAD_FILE)
 UPLOAD_HASH = re.sub(r'"','',re.sub(r', "file_name"', '', os.popen(UPLOAD_FILE).read()).rsplit(': ', 2)[1])
-
-print(UPLOAD_HASH)
-
+SCAN = "curl -X POST --url http://localhost:8000/api/v1/scan --data 'scan_type=apk&file_name=%s.apk&hash=%s' -H 'Authorization:%s'" % (TARGET, UPLOAD_HASH, API_KEY)
+#os.system(SCAN)
+JSON_REPORT = "curl -X POST --url http://localhost:8000/api/v1/report_json --data 'hash=%s&scan_type=apk' -H 'Authorization:%s'" % (UPLOAD_HASH, API_KEY)
+os.system(JSON_REPORT)
